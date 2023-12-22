@@ -42,13 +42,19 @@ library(factoextra)
 Z = tab.disjonctif.prop(Cleaned, seed=NULL, row.w=NULL)
 #Partie AFCM
 Cleaned.MCA = MCA(Cleaned)
+#Contributions des variables au 1er axe
+fviz_contrib(Cleaned.MCA, choice="var", axes=1, top=15)
+#Contributions des variables au 2ème axe
+fviz_contrib(Cleaned.MCA, choice="var", axes=2, top=15)
+#Contributions des variables au 1er plan factoriel
+fviz_contrib(Cleaned.MCA, choice="var", axes=1:2, top=15)
 #Contributions des individus au 1er axe
 fviz_contrib(Cleaned.MCA, choice="ind", axes=1, top=15)
 #Contributions des individus au 2ème axe
 fviz_contrib(Cleaned.MCA, choice="ind", axes=2, top=15)
 #Contributions des individus au 1er plan factoriel
 fviz_contrib(Cleaned.MCA, choice="ind", axes=1:2, top=15)
-#Valeurs Propres
+#Valeurs Propreshttp://127.0.0.1:39523/graphics/bd8a0c8d-09a9-45e8-8f4d-2751dc688eb0.png
 val.propres = get_eigenvalue(Cleaned.MCA)
 fviz_screeplot(Cleaned.MCA, addlabels=TRUE)
 #Biplot Individus-Variables
