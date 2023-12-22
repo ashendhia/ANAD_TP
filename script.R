@@ -38,3 +38,18 @@ for (i in seq_along(Var_frequency)) {
 }
 
 library(FactoMineR)
+library(factoextra)
+Z = tab.disjonctif.prop(Cleaned, seed=NULL, row.w=NULL)
+#Partie AFCM
+Cleaned.MCA = MCA(Cleaned)
+#Contributions des individus au 1er axe
+fviz_contrib(Cleaned.MCA, choice="ind", axes=1, top=15)
+#Contributions des individus au 2ème axe
+fviz_contrib(Cleaned.MCA, choice="ind", axes=2, top=15)
+#Contributions des individus au 1er plan factoriel
+fviz_contrib(Cleaned.MCA, choice="ind", axes=1:2, top=15)
+#Valeurs Propres
+val.propres = get_eigenvalue(Cleaned.MCA)
+fviz_screeplot(Cleaned.MCA, addlabels=TRUE)
+#Biplot Individus-Variables
+fviz_mca_biplot(Cleaned.MCA, repel=TRUE, ggtheme= theme_minimal())
