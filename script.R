@@ -42,6 +42,11 @@ library(factoextra)
 Z = tab.disjonctif.prop(Cleaned, seed=NULL, row.w=NULL)
 #Partie AFCM
 Cleaned.MCA = MCA(Cleaned)
+#Valeurs Propres
+val.propres = get_eigenvalue(Cleaned.MCA)
+fviz_screeplot(Cleaned.MCA, addlabels=TRUE)
+#Biplot Individus-Variables
+fviz_mca_biplot(Cleaned.MCA, repel=TRUE, ggtheme= theme_minimal())
 #Contributions des variables au 1er axe
 fviz_contrib(Cleaned.MCA, choice="var", axes=1, top=15)
 #Contributions des variables au 2ème axe
@@ -54,8 +59,26 @@ fviz_contrib(Cleaned.MCA, choice="ind", axes=1, top=15)
 fviz_contrib(Cleaned.MCA, choice="ind", axes=2, top=15)
 #Contributions des individus au 1er plan factoriel
 fviz_contrib(Cleaned.MCA, choice="ind", axes=1:2, top=15)
-#Valeurs Propreshttp://127.0.0.1:39523/graphics/bd8a0c8d-09a9-45e8-8f4d-2751dc688eb0.png
-val.propres = get_eigenvalue(Cleaned.MCA)
-fviz_screeplot(Cleaned.MCA, addlabels=TRUE)
-#Biplot Individus-Variables
-fviz_mca_biplot(Cleaned.MCA, repel=TRUE, ggtheme= theme_minimal())
+#Corrélation entre les variables
+fviz_mca_var(Cleaned.MCA, repel = TRUE, choice="mca.cor", ggtheme = theme_minimal())
+#Qualité de représentation
+rep_var <- get_mca_var(Cleaned.MCA)
+rep_var$cos2
+#Visualisation des Variables colorés selon les qualités de représentation
+fviz_mca_var(Cleaned.MCA, col.var = "cos2", gradient.cols= c("#00AFBB","#E7B800","#FC4E07"))
+#Les variables les mieux representées
+View(Cleaned.MCA$var$eta2)
+#Partie AFC
+#Croiser 2 questions
+X <- Z[,c(4:8,13:21)]
+X <- matrix(data = X, nrow=15,ncol=14, dimnames = list(NULL, c("F", "FO", "FOA","O","OA", "RSFP", "T", "TRP", "TRSFP", "TRSFPA","TRSP","TRSPA", "TSFP", "TSP")))
+#Matrice Burt de contingence
+Burt <- t(X)%*%X
+Burt.useful <- Burt[1:5, c(6:14)]
+Burt.ca <- CA(Burt.useful)
+#Contributions & comparaisons avec les poids des lignes
+View(Burt.ca$row$contrib)
+View(Burt.ca$call$marge.row * 100)
+#Contribtuions & comparaisons avec les poids des colonnes
+View(Burt.ca$col$contrib)
+View(Burt.ca$call$marge.col * 100)
